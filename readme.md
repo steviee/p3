@@ -5,7 +5,7 @@ The P3 aims to provide a simple audio player appliance created with a Raspberry 
 
 ## The prototype
 
-![](doc/prototype.jpg)
+![](https://raw.githubusercontent.com/steviee/p3/master/doc/prototype.jpg)
 
 The prototype consists of a Raspberry Pi B, a Nano WiFi dongle and a 3.2" LCD touch panel (specifics will follow) running a raspbian image.
 
@@ -16,7 +16,7 @@ Currently the UI shows only the web radio station, the current song info and a s
 
 The audio stream is played ON THE RASPBERRY itself, not in within the Chromium instance, so you can remote-control the player from any browser.
 
-![](doc/ui.png)
+![](https://raw.githubusercontent.com/steviee/p3/master/doc/ui.png)
 
 
 ## Why
