@@ -1,4 +1,5 @@
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>PPP - PiPlayerProject</title>
 </head>
 
@@ -9,6 +10,10 @@
 <template name="hello">
   <span>{{info.station}}</span><br>
   <span><strong>{{info.title}}</strong></span><br>
-  <button name="btnStartStop">Click Me</button>
-  <p>Status: {{info.status}}</p>
+  <button name="btnStartStop">Start / Stop</button>
+  <p>{{volume}}
+	<button name="btnVolUp">+</button>
+  <button name="btnVolDn">-</button>
+	</p>
+	<p>Status: {{info.status}}</p>
 </template>

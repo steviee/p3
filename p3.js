@@ -1,21 +1,35 @@
 if (Meteor.isClient) {
   // counter starts at 0
-  Session.setDefault("counter", 0);
+  Session.setDefault("volume", 50);
 
   Template.hello.helpers({
-    counter: function () {
-      return Session.get("counter");
+    volume: function () {
+        return Session.get("volume");
     },
-	info: function () {
+	  info: function () {
 	      return Infos.findOne();
-	}
+	  }
   });
 
   Template.hello.events({
     'click button[name=btnStartStop]': function () {
-      // increment the counter when button is clicked
-      // Session.set("counter", Session.get("counter") + 1);
       startStop();
+    },
+    'click button[name=btnVolUp]': function () {
+ 	 	  var vol = Session.get("volume");
+			if(vol <=95) {
+				vol += 5;
+			}
+			Session.set("volume", vol);
+			Meteor.call('setVolume', vol);
+    },
+    'click button[name=btnVolDn]': function () {
+ 	 	  var vol = Session.get("volume");
+			if(vol >=5) {
+				vol -= 5;
+			}
+			Session.set("volume", vol);
+			Meteor.call('setVolume', vol);
     }
   });
 
@@ -40,7 +54,7 @@ if (Meteor.isServer) {
     
 	// set up database
 	Infos.remove({});
-	Infos.insert({ status: "stopped", title: "", station: "" });
+	Infos.insert({ status: "stopped", title: "", station: "", volume: 50 });
 		
 	// code to run on server at startup
 	Lame = Meteor.npmRequire('lame');
@@ -52,10 +66,10 @@ if (Meteor.isServer) {
 
   Meteor.methods({
    'setVolume' : function setVolume(volume) {
-	  currentVolumeValue = volume;
-	  if(currentVolume != null) {
-		currentVolume.setVolume(currentVolumeValue);
-	  }
+		  currentVolumeValue = volume / 10;
+		  if(currentVolume != null) {
+				currentVolume.setVolume(currentVolumeValue);
+			}
     },
    'startStop': function startStop(user) {
 
