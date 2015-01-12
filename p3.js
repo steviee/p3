@@ -6,70 +6,98 @@ if (Meteor.isClient) {
     counter: function () {
       return Session.get("counter");
     },
-    status: function() {
-      Meteor.call('status', user, callback, function(result) {
-        return result;  
-      });
-    }
+	info: function () {
+	      return Infos.findOne();
+	}
   });
 
   Template.hello.events({
-    'click button': function () {
+    'click button[name=btnStartStop]': function () {
       // increment the counter when button is clicked
       // Session.set("counter", Session.get("counter") + 1);
-      play();
+      startStop();
     }
   });
 
-  play = function play(user, callback) {
-    Meteor.call('play', user, callback);
+  startStop = function play(user, callback) {
+    Meteor.call('startStop', user, callback);
   }
 }
 
+Infos = new Mongo.Collection("infos");
+
 if (Meteor.isServer) {
-  var meteor_root = Npm.require('fs').realpathSync( process.cwd() + '/../../../../../' );
-  var Player = null;
-  var player = null;
   var player_status = 'stopped';
+  var Lame = null, Icecast = null, Speaker = null, Volume = null;
+
+  var currentVolume = null;
+  var currentVolumeValue = 0.5;
+  var client = null;
+
+  var stationName = '';
 
   Meteor.startup(function () {
-    // code to run on server at startup
-    Player = Meteor.npmRequire('player');
+    
+	// set up database
+	Infos.remove({});
+	Infos.insert({ status: "stopped", title: "", station: "" });
+		
+	// code to run on server at startup
+	Lame = Meteor.npmRequire('lame');
+	Icecast = Meteor.npmRequire('icecast');
+	Speaker = Meteor.npmRequire('speaker');
+	Volume = Meteor.npmRequire("pcm-volume");
+	
   });
 
   Meteor.methods({
-    'status' : function() {
-      return player_status;
+   'setVolume' : function setVolume(volume) {
+	  currentVolumeValue = volume;
+	  if(currentVolume != null) {
+		currentVolume.setVolume(currentVolumeValue);
+	  }
     },
-    'play': function play(user) {
+   'startStop': function startStop(user) {
 
-      if (player != null) {
-        player.stop();
-        player_status = "stopped";
-      }
+	   url = "http://pub4.di.fm:80/di_vocalchillout";
+	  
+	   Infos.update({}, { status: "stopped", title: "", station: stationName });
+   
+   	   if(client) {
+		   stationName='';
+		   Infos.update({}, { status: "stopped", title: "", station: stationName });
+   		   client.abort();
+		   client = null;
+   	   } else {
+   
+	   // connect to the remote stream
+	   client = Icecast.get(url, Meteor.bindEnvironment(function (res) {
 
-      player = new Player(meteor_root + '/public/music/submerged.mp3');
-      player.on('playing',function(item){
-        player_status = "playing";
-        console.log('im playing... src:' + item);
-      });
+	     // log the HTTP response headers
+	     // console.error(res.headers);
 
-      // event: on playend
-      player.on('playend',function(item){
-        player_status = "stopped";
-        // return a playend item
-        console.log('src:' + item + ' play done, switching to next one ...');
-      });
+	     // console.log(res.headers);
+	     console.info("Station: " + res.headers['icy-name']);
+		 stationName = res.headers['icy-name'];
+		 
+	     // log any "metadata" events that happen
+	     res.on('metadata', Meteor.bindEnvironment(function (metadata) {
+	       var parsed = Icecast.parse(metadata);
+	       console.info("Playing: " + parsed.StreamTitle );
+  	   	   Infos.update({}, { status: "playing", title: parsed.StreamTitle, station: stationName });
+	     }));
+		 
+	   	
+	     currentVolume = new Volume();
+	     currentVolume.setVolume(currentVolumeValue);
 
-      // event: on error
-      player.on('error', function(err){
-        player_status = "error: " + err;
-        // when error occurs
-        console.log(err);
-      });
-
-      player.play();
-
+	     // Let's play the music (assuming MP3 data).
+	     // lame decodes and Speaker sends to speakers!
+	     res.pipe(new Lame.Decoder())
+            .pipe(currentVolume)
+	        .pipe(new Speaker());
+	   }));
+   	  }
     }
   });
 }

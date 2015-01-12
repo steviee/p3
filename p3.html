@@ -1,14 +1,14 @@
 <head>
-  <title>p3</title>
+  <title>PPP - PiPlayerProject</title>
 </head>
 
 <body>
-  <h1>Welcome to Meteor!</h1>
-
   {{> hello}}
 </body>
 
 <template name="hello">
-  <button>Click Me</button>
-  <p>Status: {{status}}</p>
+  <span>{{info.station}}</span><br>
+  <span><strong>{{info.title}}</strong></span><br>
+  <button name="btnStartStop">Click Me</button>
+  <p>Status: {{info.status}}</p>
 </template>
