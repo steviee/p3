@@ -1,5 +1,6 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
   <title>PPP - PiPlayerProject</title>
 </head>
 
@@ -8,12 +9,47 @@
 </body>
 
 <template name="hello">
-  <span>{{info.station}}</span><br>
-  <span><strong>{{info.title}}</strong></span><br>
-  <button name="btnStartStop">Start / Stop</button>
+<style>
+    .pure-g > div {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    .l-box {
+        padding: 1px;
+    }
+	  .button-xsmall {
+	             font-size: 70%;
+	         }
+
+	         .button-small {
+	             font-size: 85%;
+	         }
+
+	         .button-large {
+	             font-size: 110%;
+	         }
+
+	         .button-xlarge {
+	             font-size: 125%;
+	         }
+					 .control {
+						 background-color: #fcfcfc;
+					 }
+</style>	
+	<div class="pure-g">
+	    <div class="control pure-u-1-6 l-box">
+  <button class="pure-button pure-button-primary button-xlarge" name="btnStartStop">Start / Stop</button>
   <p>{{volume}}
-	<button name="btnVolUp">+</button>
-  <button name="btnVolDn">-</button>
+	<button class="pure-button button-large" name="btnVolUp">+</button>
+  <button class="pure-button button-large" name="btnVolDn">-</button>
 	</p>
 	<p>Status: {{info.status}}</p>
+</div>
+<div class="info pure-u-5-6 l-box">
+  <span>{{info.station}}</span><br>
+  <span><strong>{{info.title}}</strong></span><br>
+</div>
+</div>
+
 </template>
