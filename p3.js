@@ -8,7 +8,13 @@ if (Meteor.isClient) {
     },
 	  info: function () {
 	      return Infos.findOne();
-	  }
+	  },
+		isPlaying: function() {
+			return Infos.findOne() ? Infos.findOne().status === 'playing' : false;
+		},
+		isStopped: function() {
+			return Infos.findOne() ? Infos.findOne().status === 'stopped' : true;
+		}
   });
 
   Template.hello.events({

@@ -2,7 +2,7 @@
 
 The P3 aims to provide a simple audio player appliance created with a Raspberry Pi and a little bit of Javascript using the Meteor stack (www.meteor.com).
 
-
+0
 ## The prototype
 
 ![](https://raw.githubusercontent.com/steviee/p3/master/doc/prototype.jpg)

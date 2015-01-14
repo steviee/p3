@@ -10,46 +10,109 @@
 
 <template name="hello">
 <style>
-    .pure-g > div {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-    }
-    .l-box {
-        padding: 1px;
-    }
-	  .button-xsmall {
-	             font-size: 70%;
-	         }
 
-	         .button-small {
-	             font-size: 85%;
-	         }
+html {
+	height: 100%;
+	width: 100%;
+}
 
-	         .button-large {
-	             font-size: 110%;
-	         }
+body {
+	height: 100%;
+	padding: 0px;
+	margin: 0px;
+	background-color: #ffffff;
+	font-family: "Helvetica";
+}
 
-	         .button-xlarge {
-	             font-size: 125%;
-	         }
-					 .control {
-						 background-color: #fcfcfc;
-					 }
+button {
+	border: 1px solid black;
+	background-color: #ffffff;
+	padding: 3px;
+	margin: 1px;
+	font-size: 125%;
+	border-radius: 4px;
+	min-width: 30px;
+	min-height: 30px;
+	
+}
+
+button:hover {
+	border: 1px solid black;
+	background-color: #000000;
+	color: #ffffff;
+}
+
+.statusline {
+	position: static;
+	top: 0px;
+	left: 0px;
+	height: 20px;
+	width: 100%;
+	color: #ffffff;
+	font-size: 75%;
+	padding-top: 1px;
+	background-color: #000000;
+}
+
+.control-box {
+	position: static;
+	top: 20px;
+	left: 0px;
+	width: 80px;
+	height: 100%;
+	font-size: 75%;
+	background-color: #989898;
+}
+
+.volume-up {
+	position: absolute;
+	top: 60px;
+	left: 2px;
+}
+
+.start-stop {
+	position: absolute;
+	top: 22px;
+	left: 2px;
+	height: 26px;
+	width: 74px;
+}
+
+.volume-dn {
+	position: absolute;
+	top: 90px;
+	left: 2px;
+}
+
+.volume-frame {
+	position: absolute;
+	top: 60px;
+	left: 50px;
+	width: 17px;
+	height: 102px;
+	border: 1px solid black;
+}
+
+.volume-value {
+	position: relative;
+	padding:1px;
+	width: 100%-2px;
+	background-color: red;
+	vertical-align: bottom;
+}
+
 </style>	
-	<div class="pure-g">
-	    <div class="control pure-u-1-6 l-box">
-  <button class="pure-button pure-button-primary button-xlarge" name="btnStartStop">Start / Stop</button>
-  <p>{{volume}}
-	<button class="pure-button button-large" name="btnVolUp">+</button>
-  <button class="pure-button button-large" name="btnVolDn">-</button>
-	</p>
-	<p>Status: {{info.status}}</p>
+<div class="statusline">{{info.status}}</div>
+<div class="control-box">
+  <button class="start-stop" name="btnStartStop">{{#if isPlaying}}Stop{{/if}}{{#if isStopped}}Start{{/if}}</button>
+  <div class="volume-frame">
+  	<div class="volume-value" style="height: {{volume}}px;">
+	</div>
+  </div>
+	<button class="volume-up" name="btnVolUp">+</button>
+  <button class="volume-dn" name="btnVolDn">-</button>
+	
 </div>
-<div class="info pure-u-5-6 l-box">
   <span>{{info.station}}</span><br>
   <span><strong>{{info.title}}</strong></span><br>
-</div>
-</div>
-
 </template>
