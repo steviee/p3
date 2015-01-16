@@ -2,6 +2,24 @@ if (Meteor.isClient) {
   // counter starts at 0
   Session.setDefault("volume", 50);
 
+  Meteor.startup(function () {
+          setInterval(function () {
+              Meteor.call("getServerTime", function (error, result) {
+                  Session.set("time", result);
+              });
+              Meteor.call("getServerDate", function (error, result) {
+                  Session.set("date", result);
+              });
+          }, 1000);
+      });
+
+      Template.hello.time = function () {
+          return Session.get("time");
+      };
+      Template.hello.date = function () {
+          return Session.get("date");
+      };
+      
   Template.hello.helpers({
     volume: function () {
         return Session.get("volume");
@@ -9,7 +27,7 @@ if (Meteor.isClient) {
 	  info: function () {
 	      return Infos.findOne();
 	  },
-		isPlaying: function() {
+	  isPlaying: function() {
 			return Infos.findOne() ? Infos.findOne().status === 'playing' : false;
 		},
 		isStopped: function() {
@@ -71,6 +89,14 @@ if (Meteor.isServer) {
   });
 
   Meteor.methods({
+    'getServerTime': function () {
+                var _time = (new Date).toTimeString().substr(0,5);
+                return _time;
+            },
+    'getServerDate': function () {
+                        var _date = (new Date).toLocaleDateString();
+                        return _date;
+                    },
    'setVolume' : function setVolume(volume) {
 		  currentVolumeValue = volume / 10;
 		  if(currentVolume != null) {
@@ -96,14 +122,15 @@ if (Meteor.isServer) {
 	     // log the HTTP response headers
 	     // console.error(res.headers);
 
-	     // console.log(res.headers);
+	     console.log(res.headers);
 	     console.info("Station: " + res.headers['icy-name']);
 		 stationName = res.headers['icy-name'];
 		 
 	     // log any "metadata" events that happen
 	     res.on('metadata', Meteor.bindEnvironment(function (metadata) {
 	       var parsed = Icecast.parse(metadata);
-	       console.info("Playing: " + parsed.StreamTitle );
+	       console.log(parsed);
+         console.info("Playing: " + parsed.StreamTitle );
   	   	   Infos.update({}, { status: "playing", title: parsed.StreamTitle, station: stationName });
 	     }));
 		 

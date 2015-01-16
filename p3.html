@@ -101,6 +101,51 @@ button:hover {
 	vertical-align: bottom;
 }
 
+.music-box {
+  position: absolute;
+  top: 20px;
+  left: 81px;
+  width: 100%;
+  height: 100%;
+}
+
+.clock {
+  position: absolute;
+  top: 30px;
+  left: 120px;
+  font-family: verdana;
+  font-size:310%;
+}
+
+.date {
+  position: absolute;
+  top: 85px;
+  left: 110px;
+  font-family: verdana;
+  font-size:80%;
+}
+
+.station {
+  position: absolute;
+  top: 115px;
+  left: 10px;
+  padding-right: 80px;
+  width: auto;
+  color: #626262;
+  font-family: verdana;
+  font-size:80%;
+}
+
+.title {
+  position: absolute;
+  top: 150px;
+  left: 10px;
+  padding-right: 80px;
+  width: auto;
+  color: #000070;
+  font-family: verdana;
+  font-size:110%;
+}
 </style>	
 <div class="statusline">{{info.status}}</div>
 <div class="control-box">
@@ -113,6 +158,10 @@ button:hover {
   <button class="volume-dn" name="btnVolDn">-</button>
 	
 </div>
-  <span>{{info.station}}</span><br>
-  <span><strong>{{info.title}}</strong></span><br>
+<div class="music-box">
+  <div class="clock">{{time}}</div>
+  <div class="date">{{date}}</div>
+  <div class="station">{{info.station}}</div>
+  <div class="title">{{info.title}}</div>
+</div>
 </template>
